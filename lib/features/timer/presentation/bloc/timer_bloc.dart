@@ -100,7 +100,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
             // Transition to the next phase, but do not auto-start
             if (state.phase == TimerPhase.pomodoro) {
               _pomodoroCount++;
-              if (_pomodoroCount % 4 == 0) {
+              if (_pomodoroCount % POMODORO_LONG_BREAK_THRESHOLD == 0) {
                 add(TimerLongBreakRequested());
               } else {
                 add(TimerShortBreakRequested());
