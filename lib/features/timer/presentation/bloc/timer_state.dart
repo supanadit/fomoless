@@ -28,8 +28,8 @@ class TimerState {
 
   factory TimerState.initialPomodoro() => TimerState(
     hours: 0,
-    minutes: 0,
-    seconds: 3,
+    minutes: 25,
+    seconds: 0,
     milliseconds: 0,
     isRunning: false,
     hideMilliseconds: true,
