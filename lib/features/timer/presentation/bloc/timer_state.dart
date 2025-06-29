@@ -33,8 +33,8 @@ class TimerState {
 
   factory TimerState.initialPomodoro() => TimerState(
     hours: 0,
-    minutes: 0,
-    seconds: 2,
+    minutes: 25,
+    seconds: 0,
     milliseconds: 0,
     isRunning: false,
     hideMilliseconds: true,
@@ -43,8 +43,8 @@ class TimerState {
 
   factory TimerState.initialShortBreak() => TimerState(
     hours: 0,
-    minutes: 0,
-    seconds: 2,
+    minutes: 5,
+    seconds: 0,
     milliseconds: 0,
     isRunning: false,
     hideMilliseconds: true,
@@ -53,8 +53,8 @@ class TimerState {
 
   factory TimerState.initialLongBreak() => TimerState(
     hours: 0,
-    minutes: 0,
-    seconds: 3,
+    minutes: 15,
+    seconds: 0,
     milliseconds: 0,
     isRunning: false,
     hideMilliseconds: true,
