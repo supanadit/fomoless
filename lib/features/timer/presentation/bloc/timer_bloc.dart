@@ -1,7 +1,8 @@
 import 'dart:async';
+
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fomoless/features/timer/presentation/bloc/mode_bloc.dart';
-import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
 import 'package:stream_transform/stream_transform.dart';
 
 part 'timer_event.dart';
@@ -27,15 +28,9 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
             : TimerState.initialStopwatch(),
       ) {
     // Use restartable for user-initiated events that should cancel previous operations
-    on<TimerStarted>(
-      _onTimerStarted,
-      transformer: bloc_concurrency.restartable(),
-    );
-    on<TimerStopped>(
-      _onTimerStopped,
-      transformer: bloc_concurrency.droppable(),
-    );
-    on<TimerReset>(_onTimerReset, transformer: bloc_concurrency.droppable());
+    on<TimerStarted>(_onTimerStarted, transformer: restartable());
+    on<TimerStopped>(_onTimerStopped, transformer: droppable());
+    on<TimerReset>(_onTimerReset, transformer: droppable());
 
     // Use throttle to prevent excessive UI updates on slow devices
     on<TimerTicked>(
@@ -46,12 +41,9 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     // Use droppable for these less time-sensitive events to prevent queuing
     on<TimerToggleMilliseconds>(
       _onToggleMilliseconds,
-      transformer: bloc_concurrency.droppable(),
+      transformer: droppable(),
     );
-    on<TimerModeChanged>(
-      _onModeChanged,
-      transformer: bloc_concurrency.droppable(),
-    );
+    on<TimerModeChanged>(_onModeChanged, transformer: droppable());
   }
 
   void _onTimerStarted(TimerStarted event, Emitter<TimerState> emit) {
