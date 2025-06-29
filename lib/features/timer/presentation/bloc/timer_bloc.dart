@@ -24,17 +24,11 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       } else {
         emit(state.copyWith(isRunning: true));
 
-        // Reset the count up milliseconds for a fresh start if we're counting up
-        final isInitiallyCountDown =
-            state.hours > 0 ||
-            state.minutes > 0 ||
-            state.seconds > 0 ||
-            state.milliseconds > 0;
+        // Use mode to determine count direction
+        final isCountDown = _currentMode == TimerMode.pomodoro;
 
-        if (!isInitiallyCountDown) {
-          _countUpMilliseconds = 0;
-        } else {
-          // For count down, initialize based on current state
+        if (!isCountDown) {
+          // Stopwatch: continue from current count up value
           _countUpMilliseconds =
               state.hours * 3600000 +
               state.minutes * 60000 +
@@ -43,8 +37,6 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
         }
 
         _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-          final isCountDown = isInitiallyCountDown;
-
           if (isCountDown) {
             // Count down
             int totalMs =
