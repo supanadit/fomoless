@@ -17,9 +17,18 @@ class TimerState {
     required this.hideMilliseconds,
   });
 
-  factory TimerState.initial() => TimerState(
+  factory TimerState.initialStopwatch() => TimerState(
     hours: 0,
     minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+    isRunning: false,
+    hideMilliseconds: true,
+  );
+
+  factory TimerState.initialPomodoro() => TimerState(
+    hours: 0,
+    minutes: 25,
     seconds: 0,
     milliseconds: 0,
     isRunning: false,

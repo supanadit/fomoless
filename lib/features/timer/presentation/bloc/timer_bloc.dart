@@ -13,15 +13,8 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     : _currentMode = initialMode,
       super(
         initialMode == TimerMode.pomodoro
-            ? TimerState(
-                hours: 0,
-                minutes: 25,
-                seconds: 0,
-                milliseconds: 0,
-                isRunning: false,
-                hideMilliseconds: true,
-              )
-            : TimerState.initial(),
+            ? TimerState.initialPomodoro()
+            : TimerState.initialStopwatch(),
       ) {
     on<TimerStarted>((event, emit) {
       if (state.isRunning) {
@@ -92,7 +85,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
         );
       } else {
         emit(
-          TimerState.initial().copyWith(
+          TimerState.initialStopwatch().copyWith(
             hideMilliseconds: state.hideMilliseconds,
           ),
         );
@@ -148,7 +141,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
         );
       } else {
         emit(
-          TimerState.initial().copyWith(
+          TimerState.initialStopwatch().copyWith(
             hideMilliseconds: state.hideMilliseconds,
           ),
         );
