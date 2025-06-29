@@ -48,11 +48,8 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       _onShortBreakRequested,
       transformer: droppable(),
     );
-    
-    on<TimerPhaseCompleted>(
-      _onPhaseCompleted,
-      transformer: droppable(),
-    );
+
+    on<TimerPhaseCompleted>(_onPhaseCompleted, transformer: droppable());
   }
 
   void _onTimerStarted(TimerStarted event, Emitter<TimerState> emit) {
@@ -85,16 +82,10 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
               10;
           if (totalMs <= 0) {
             _timer?.cancel();
-            // Automatically transition to the next phase
+            // Transition to the next phase, but do not auto-start
             if (state.phase == TimerPhase.pomodoro) {
-              // If pomodoro is done, go to short break
               add(TimerShortBreakRequested());
-              // Use a small delay to ensure events are processed in sequence
-              Timer(const Duration(milliseconds: 100), () {
-                add(TimerStarted()); // Auto-start the short break
-              });
             } else if (state.phase == TimerPhase.shortBreak) {
-              // If short break is done, go back to pomodoro - use an event instead of direct emit
               add(TimerPhaseCompleted());
             } else {
               // For other modes, reset to initial state
@@ -245,11 +236,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
         hideMilliseconds: state.hideMilliseconds,
       ),
     );
-    
-    // Use a small delay to ensure events are processed in sequence
-    Timer(const Duration(milliseconds: 100), () {
-      add(TimerStarted()); // Auto-start the next pomodoro session
-    });
+    // No auto-start here
   }
 
   @override
