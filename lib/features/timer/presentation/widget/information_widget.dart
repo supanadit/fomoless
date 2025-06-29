@@ -21,6 +21,10 @@ class InformationWidget extends StatelessWidget {
             "2. To toggle milliseconds, tap on the time display.",
             style: TextStyle(color: Colors.grey),
           ),
+          Text(
+            "3. In pomodoro mode with natural completion, after four times you will get a long break.",
+            style: TextStyle(color: Colors.grey),
+          ),
         ],
       ),
     );

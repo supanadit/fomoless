@@ -38,7 +38,7 @@ class TimerActionWidget extends StatelessWidget {
                   ? "Done"
                   : (timerState.phase == TimerPhase.shortBreak
                         ? "Skip Break"
-                        : "Short Break"),
+                        : "Break Phase"),
               style: const TextStyle(fontSize: 16.0),
             ),
           ),
