@@ -7,9 +7,22 @@ part 'timer_state.dart';
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
   Timer? _timer;
-  TimerMode _currentMode = TimerMode.stopwatch;
+  TimerMode _currentMode;
 
-  TimerBloc() : super(TimerState.initial()) {
+  TimerBloc(TimerMode initialMode)
+    : _currentMode = initialMode,
+      super(
+        initialMode == TimerMode.pomodoro
+            ? TimerState(
+                hours: 0,
+                minutes: 25,
+                seconds: 0,
+                milliseconds: 0,
+                isRunning: false,
+                hideMilliseconds: true,
+              )
+            : TimerState.initial(),
+      ) {
     on<TimerStarted>((event, emit) {
       if (state.isRunning) {
         _timer?.cancel();
