@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fomoless/features/timer/presentation/bloc/mode_bloc.dart';
 import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
 import 'package:fomoless/features/timer/presentation/widget/information_widget.dart';
-import 'package:fomoless/features/timer/presentation/widget/time_mode_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_display_widget.dart';
+import 'package:fomoless/features/timer/presentation/widget/time_mode_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -52,6 +53,14 @@ class TimerPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 50),
                               const InformationWidget(),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () => context.go('/tasks'),
+                                child: const Text(
+                                  "Go To Tasks",
+                                  style: TextStyle(fontSize: 20.0),
+                                ),
+                              ),
                             ],
                           ),
                         ),
