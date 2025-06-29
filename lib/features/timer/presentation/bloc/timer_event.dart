@@ -22,3 +22,8 @@ class TimerTicked extends TimerEvent {
 }
 
 class TimerToggleMilliseconds extends TimerEvent {}
+
+class TimerModeChanged extends TimerEvent {
+  final TimerMode mode;
+  TimerModeChanged(this.mode);
+}
