@@ -189,11 +189,19 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   ) {
     _timer?.cancel();
     _countUpMilliseconds = 0;
-    emit(
-      TimerState.initialShortBreak().copyWith(
-        hideMilliseconds: state.hideMilliseconds,
-      ),
-    );
+    if (state.phase == TimerPhase.shortBreak) {
+      emit(
+        TimerState.initialPomodoro().copyWith(
+          hideMilliseconds: state.hideMilliseconds,
+        ),
+      );
+    } else {
+      emit(
+        TimerState.initialShortBreak().copyWith(
+          hideMilliseconds: state.hideMilliseconds,
+        ),
+      );
+    }
   }
 
   @override
