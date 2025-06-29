@@ -258,11 +258,22 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   ) {
     _timer?.cancel();
     _countUpMilliseconds = 0;
-    emit(
-      TimerState.initialLongBreak().copyWith(
-        hideMilliseconds: state.hideMilliseconds,
-      ),
-    );
+    if (state.phase == TimerPhase.longBreak) {
+      // Switch back to pomodoro
+      _currentMode = TimerMode.pomodoro;
+      emit(
+        TimerState.initialPomodoro().copyWith(
+          hideMilliseconds: state.hideMilliseconds,
+        ),
+      );
+      return;
+    } else {
+      emit(
+        TimerState.initialLongBreak().copyWith(
+          hideMilliseconds: state.hideMilliseconds,
+        ),
+      );
+    }
   }
 
   void _onPhaseCompleted(TimerPhaseCompleted event, Emitter<TimerState> emit) {
