@@ -6,6 +6,7 @@ import 'package:fomoless/features/timer/presentation/widget/information_widget.d
 import 'package:fomoless/features/timer/presentation/widget/time_mode_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_display_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/timer_action_widget.dart';
+import 'package:fomoless/features/timer/presentation/widget/phase_info_widget.dart';
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -45,26 +46,7 @@ class TimerPage extends StatelessWidget {
                                 const SizedBox(height: 10),
                               if (timerState.phase == TimerPhase.stopwatch)
                                 const SizedBox(height: 30),
-                              Visibility(
-                                visible:
-                                    timerState.phase != TimerPhase.stopwatch,
-                                // Capitalize first letter of the phase name
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "Current Phase:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      "${timerState.phase.name[0].toUpperCase()}${timerState.phase.name.substring(1)}",
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              PhaseInfoWidget(timerState: timerState),
                               if (timerState.phase != TimerPhase.stopwatch)
                                 const SizedBox(height: 20),
                               TimerActionWidget(
