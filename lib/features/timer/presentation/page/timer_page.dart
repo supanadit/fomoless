@@ -41,6 +41,16 @@ class TimerPage extends StatelessWidget {
                               const SizedBox(height: 20),
                               const TimeDisplayWidget(),
                               const SizedBox(height: 30),
+                              Visibility(
+                                visible:
+                                    timerState.phase != TimerPhase.stopwatch,
+                                // Capitalize first letter of the phase name
+                                child: Text(
+                                  "Phase: ${timerState.phase.name[0].toUpperCase()}${timerState.phase.name.substring(1)}",
+                                ),
+                              ),
+                              if (timerState.phase != TimerPhase.stopwatch)
+                                const SizedBox(height: 20),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
