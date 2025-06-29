@@ -1,5 +1,7 @@
 part of 'timer_bloc.dart';
 
+enum TimerPhase { pomodoro, shortBreak, stopwatch }
+
 class TimerState {
   final int hours;
   final int minutes;
@@ -7,6 +9,7 @@ class TimerState {
   final int milliseconds;
   final bool isRunning;
   final bool hideMilliseconds;
+  final TimerPhase phase;
 
   TimerState({
     required this.hours,
@@ -15,6 +18,7 @@ class TimerState {
     required this.milliseconds,
     required this.isRunning,
     required this.hideMilliseconds,
+    required this.phase,
   });
 
   factory TimerState.initialStopwatch() => TimerState(
@@ -24,6 +28,7 @@ class TimerState {
     milliseconds: 0,
     isRunning: false,
     hideMilliseconds: true,
+    phase: TimerPhase.stopwatch,
   );
 
   factory TimerState.initialPomodoro() => TimerState(
@@ -33,6 +38,17 @@ class TimerState {
     milliseconds: 0,
     isRunning: false,
     hideMilliseconds: true,
+    phase: TimerPhase.pomodoro,
+  );
+
+  factory TimerState.initialShortBreak() => TimerState(
+    hours: 0,
+    minutes: 5,
+    seconds: 0,
+    milliseconds: 0,
+    isRunning: false,
+    hideMilliseconds: true,
+    phase: TimerPhase.shortBreak,
   );
 
   TimerState copyWith({
@@ -42,6 +58,7 @@ class TimerState {
     int? milliseconds,
     bool? isRunning,
     bool? hideMilliseconds,
+    TimerPhase? phase,
   }) {
     return TimerState(
       hours: hours ?? this.hours,
@@ -50,6 +67,7 @@ class TimerState {
       milliseconds: milliseconds ?? this.milliseconds,
       isRunning: isRunning ?? this.isRunning,
       hideMilliseconds: hideMilliseconds ?? this.hideMilliseconds,
+      phase: phase ?? this.phase,
     );
   }
 }

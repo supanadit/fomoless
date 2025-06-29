@@ -4,6 +4,8 @@ import 'package:fomoless/features/timer/presentation/bloc/mode_bloc.dart';
 import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
 import 'package:fomoless/features/timer/presentation/widget/information_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_display_widget.dart';
+import 'package:fomoless/features/timer/presentation/widget/timer_action_widget.dart';
+import 'package:fomoless/features/timer/presentation/widget/phase_info_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_mode_widget.dart';
 import 'package:go_router/go_router.dart';
 
@@ -41,15 +43,16 @@ class TimerPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 20),
                               const TimeDisplayWidget(),
-                              const SizedBox(height: 30),
-                              ElevatedButton(
-                                onPressed: () {
-                                  context.read<TimerBloc>().add(TimerStarted());
-                                },
-                                child: Text(
-                                  timerState.isRunning ? "Stop" : "Start",
-                                  style: const TextStyle(fontSize: 20.0),
-                                ),
+                              if (timerState.phase != TimerPhase.stopwatch)
+                                const SizedBox(height: 10),
+                              if (timerState.phase == TimerPhase.stopwatch)
+                                const SizedBox(height: 30),
+                              PhaseInfoWidget(timerState: timerState),
+                              if (timerState.phase != TimerPhase.stopwatch)
+                                const SizedBox(height: 20),
+                              TimerActionWidget(
+                                timerState: timerState,
+                                modeState: modeState,
                               ),
                               const SizedBox(height: 50),
                               const InformationWidget(),
