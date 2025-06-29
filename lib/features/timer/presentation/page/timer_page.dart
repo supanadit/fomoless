@@ -65,12 +65,10 @@ class TimerPage extends StatelessWidget {
                                         );
                                       },
                                       child: Text(
-                                        timerState.isRunning
-                                            ? "Done"
-                                            : (timerState.phase ==
-                                                      TimerPhase.shortBreak
-                                                  ? "Pomodoro"
-                                                  : "Short Break"),
+                                        timerState.phase ==
+                                                TimerPhase.shortBreak
+                                            ? "Back to Pomodoro"
+                                            : "Skip to Break",
                                         style: const TextStyle(fontSize: 16.0),
                                       ),
                                     ),

@@ -29,3 +29,5 @@ class TimerModeChanged extends TimerEvent {
 }
 
 class TimerShortBreakRequested extends TimerEvent {}
+
+class TimerPhaseCompleted extends TimerEvent {}

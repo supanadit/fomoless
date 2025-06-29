@@ -48,6 +48,11 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       _onShortBreakRequested,
       transformer: droppable(),
     );
+    
+    on<TimerPhaseCompleted>(
+      _onPhaseCompleted,
+      transformer: droppable(),
+    );
   }
 
   void _onTimerStarted(TimerStarted event, Emitter<TimerState> emit) {
@@ -80,23 +85,41 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
               10;
           if (totalMs <= 0) {
             _timer?.cancel();
-            // Reset to initial state based on current mode instead of zero
-            if (_currentMode == TimerMode.pomodoro) {
-              final initialState = TimerState.initialPomodoro();
-              add(
-                TimerTicked(
-                  hours: initialState.hours,
-                  minutes: initialState.minutes,
-                  seconds: initialState.seconds,
-                  milliseconds: initialState.milliseconds,
-                ),
-              );
+            // Automatically transition to the next phase
+            if (state.phase == TimerPhase.pomodoro) {
+              // If pomodoro is done, go to short break
+              add(TimerShortBreakRequested());
+              // Use a small delay to ensure events are processed in sequence
+              Timer(const Duration(milliseconds: 100), () {
+                add(TimerStarted()); // Auto-start the short break
+              });
+            } else if (state.phase == TimerPhase.shortBreak) {
+              // If short break is done, go back to pomodoro - use an event instead of direct emit
+              add(TimerPhaseCompleted());
             } else {
-              add(
-                TimerTicked(hours: 0, minutes: 0, seconds: 0, milliseconds: 0),
-              );
+              // For other modes, reset to initial state
+              if (_currentMode == TimerMode.pomodoro) {
+                final initialState = TimerState.initialPomodoro();
+                add(
+                  TimerTicked(
+                    hours: initialState.hours,
+                    minutes: initialState.minutes,
+                    seconds: initialState.seconds,
+                    milliseconds: initialState.milliseconds,
+                  ),
+                );
+              } else {
+                add(
+                  TimerTicked(
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    milliseconds: 0,
+                  ),
+                );
+              }
+              add(TimerStopped());
             }
-            add(TimerStopped());
             return;
           }
           int h = totalMs ~/ 3600000;
@@ -162,22 +185,27 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _currentMode = event.mode;
     _timer?.cancel();
     _countUpMilliseconds = 0;
+
+    // Reset timer state based on current mode
     if (_currentMode == TimerMode.pomodoro) {
       emit(
         TimerState.initialPomodoro().copyWith(
           hideMilliseconds: state.hideMilliseconds,
+          phase: TimerPhase.pomodoro,
         ),
       );
     } else if (_currentMode == TimerMode.stopwatch) {
       emit(
         TimerState.initialStopwatch().copyWith(
           hideMilliseconds: state.hideMilliseconds,
+          phase: TimerPhase.stopwatch,
         ),
       );
     } else {
       emit(
         TimerState.initialShortBreak().copyWith(
           hideMilliseconds: state.hideMilliseconds,
+          phase: TimerPhase.shortBreak,
         ),
       );
     }
@@ -190,18 +218,38 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _timer?.cancel();
     _countUpMilliseconds = 0;
     if (state.phase == TimerPhase.shortBreak) {
+      // Switch back to pomodoro
+      _currentMode = TimerMode.pomodoro;
       emit(
         TimerState.initialPomodoro().copyWith(
           hideMilliseconds: state.hideMilliseconds,
         ),
       );
     } else {
+      // Switch to short break
+      _currentMode = TimerMode
+          .pomodoro; // Keep the mode as pomodoro, just change the phase
       emit(
         TimerState.initialShortBreak().copyWith(
           hideMilliseconds: state.hideMilliseconds,
         ),
       );
     }
+  }
+
+  void _onPhaseCompleted(TimerPhaseCompleted event, Emitter<TimerState> emit) {
+    // When short break is completed, switch to pomodoro
+    _currentMode = TimerMode.pomodoro;
+    emit(
+      TimerState.initialPomodoro().copyWith(
+        hideMilliseconds: state.hideMilliseconds,
+      ),
+    );
+    
+    // Use a small delay to ensure events are processed in sequence
+    Timer(const Duration(milliseconds: 100), () {
+      add(TimerStarted()); // Auto-start the next pomodoro session
+    });
   }
 
   @override
