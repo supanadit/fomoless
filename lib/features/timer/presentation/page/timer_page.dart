@@ -18,6 +18,7 @@ class _TimerPageState extends State<TimerPage> {
   int milliseconds = 0;
 
   bool isRunning = false;
+  bool hideMilliseconds = true;
   Timer? _timer;
 
   void startTimer() {
@@ -78,9 +79,14 @@ class _TimerPageState extends State<TimerPage> {
           children: [
             GestureDetector(
               onDoubleTap: resetTimer,
+              onTap: () {
+                setState(() {
+                  hideMilliseconds = !hideMilliseconds;
+                });
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     twoDigits(hours),
@@ -96,15 +102,31 @@ class _TimerPageState extends State<TimerPage> {
                     twoDigits(seconds),
                     style: const TextStyle(fontSize: fontSizeTime),
                   ),
-                  const Text(".", style: TextStyle(fontSize: fontSizeTime)),
-                  Text(
-                    milliseconds.toString().padLeft(3, '0'),
-                    style: const TextStyle(fontSize: fontSizeTime),
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Visibility(
+                      visible: !hideMilliseconds,
+                      child: Row(
+                        children: [
+                          const Text(
+                            ".",
+                            style: TextStyle(fontSize: 30, color: Colors.grey),
+                          ),
+                          Text(
+                            milliseconds.toString().padLeft(3, '0'),
+                            style: const TextStyle(
+                              fontSize: 30,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             ElevatedButton(
               onPressed: startTimer,
               child: Text(
@@ -112,7 +134,7 @@ class _TimerPageState extends State<TimerPage> {
                 style: const TextStyle(fontSize: 20.0),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +142,11 @@ class _TimerPageState extends State<TimerPage> {
                 // Light gray text for information
                 Text("Information:", style: TextStyle(color: Colors.grey)),
                 Text(
-                  "To reset the timer, double tap on the time display.",
+                  "1. To reset the timer, double tap on the time display.",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                Text(
+                  "2. To toggle milliseconds, tap on the time display.",
                   style: TextStyle(color: Colors.grey),
                 ),
               ],
