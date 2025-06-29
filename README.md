@@ -2,7 +2,7 @@
 
 Manage your time effectively with Fomoless, a Flutter application that actually a Pomodoro timer. This app helps you stay focused and productive by breaking your work into intervals, separated by short breaks.
 
-![Demo Windows](https://raw.githubusercontent.com/supanadit/fomoless/main/demo/demo-windows.png)
+![Demo Windows](https://raw.githubusercontent.com/supanadit/fomoless/refs/heads/main/demo/demo-windows.png)
 
 ## License
 
