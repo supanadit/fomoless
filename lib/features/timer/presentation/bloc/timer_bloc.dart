@@ -44,6 +44,10 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       transformer: droppable(),
     );
     on<TimerModeChanged>(_onModeChanged, transformer: droppable());
+    on<TimerShortBreakRequested>(
+      _onShortBreakRequested,
+      transformer: droppable(),
+    );
   }
 
   void _onTimerStarted(TimerStarted event, Emitter<TimerState> emit) {
@@ -164,13 +168,32 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
           hideMilliseconds: state.hideMilliseconds,
         ),
       );
-    } else {
+    } else if (_currentMode == TimerMode.stopwatch) {
       emit(
         TimerState.initialStopwatch().copyWith(
           hideMilliseconds: state.hideMilliseconds,
         ),
       );
+    } else {
+      emit(
+        TimerState.initialShortBreak().copyWith(
+          hideMilliseconds: state.hideMilliseconds,
+        ),
+      );
     }
+  }
+
+  void _onShortBreakRequested(
+    TimerShortBreakRequested event,
+    Emitter<TimerState> emit,
+  ) {
+    _timer?.cancel();
+    _countUpMilliseconds = 0;
+    emit(
+      TimerState.initialShortBreak().copyWith(
+        hideMilliseconds: state.hideMilliseconds,
+      ),
+    );
   }
 
   @override

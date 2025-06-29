@@ -41,14 +41,35 @@ class TimerPage extends StatelessWidget {
                               const SizedBox(height: 20),
                               const TimeDisplayWidget(),
                               const SizedBox(height: 30),
-                              ElevatedButton(
-                                onPressed: () {
-                                  context.read<TimerBloc>().add(TimerStarted());
-                                },
-                                child: Text(
-                                  timerState.isRunning ? "Stop" : "Start",
-                                  style: const TextStyle(fontSize: 20.0),
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      context.read<TimerBloc>().add(
+                                        TimerStarted(),
+                                      );
+                                    },
+                                    child: Text(
+                                      timerState.isRunning ? "Stop" : "Start",
+                                      style: const TextStyle(fontSize: 20.0),
+                                    ),
+                                  ),
+                                  if (modeState.mode == TimerMode.pomodoro)
+                                    const SizedBox(width: 16),
+                                  if (modeState.mode == TimerMode.pomodoro)
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        context.read<TimerBloc>().add(
+                                          TimerShortBreakRequested(),
+                                        );
+                                      },
+                                      child: const Text(
+                                        "Short Break",
+                                        style: TextStyle(fontSize: 16.0),
+                                      ),
+                                    ),
+                                ],
                               ),
                               const SizedBox(height: 50),
                               const InformationWidget(),
