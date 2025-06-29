@@ -77,53 +77,61 @@ class _TimerPageState extends State<TimerPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
+            InkWell(
+              borderRadius: BorderRadius.circular(10.0),
               onDoubleTap: resetTimer,
               onTap: () {
                 setState(() {
                   hideMilliseconds = !hideMilliseconds;
                 });
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    twoDigits(hours),
-                    style: const TextStyle(fontSize: fontSizeTime),
-                  ),
-                  const Text(":", style: TextStyle(fontSize: fontSizeTime)),
-                  Text(
-                    twoDigits(minutes),
-                    style: const TextStyle(fontSize: fontSizeTime),
-                  ),
-                  const Text(":", style: TextStyle(fontSize: fontSizeTime)),
-                  Text(
-                    twoDigits(seconds),
-                    style: const TextStyle(fontSize: fontSizeTime),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Visibility(
-                      visible: !hideMilliseconds,
-                      child: Row(
-                        children: [
-                          const Text(
-                            ".",
-                            style: TextStyle(fontSize: 30, color: Colors.grey),
-                          ),
-                          Text(
-                            milliseconds.toString().padLeft(3, '0'),
-                            style: const TextStyle(
-                              fontSize: 30,
-                              color: Colors.grey,
+              child: Container(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      twoDigits(hours),
+                      style: const TextStyle(fontSize: fontSizeTime),
+                    ),
+                    const Text(":", style: TextStyle(fontSize: fontSizeTime)),
+                    Text(
+                      twoDigits(minutes),
+                      style: const TextStyle(fontSize: fontSizeTime),
+                    ),
+                    const Text(":", style: TextStyle(fontSize: fontSizeTime)),
+                    Text(
+                      twoDigits(seconds),
+                      style: const TextStyle(fontSize: fontSizeTime),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Visibility(
+                        visible: !hideMilliseconds,
+                        child: Row(
+                          children: [
+                            const Text(
+                              ".",
+                              style: TextStyle(
+                                fontSize: 30,
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                        ],
+                            Text(
+                              milliseconds.toString().padLeft(3, '0'),
+                              style: const TextStyle(
+                                fontSize: 30,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 30),
