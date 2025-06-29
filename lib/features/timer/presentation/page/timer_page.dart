@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
 import 'package:fomoless/features/timer/presentation/widget/information_widget.dart';
+import 'package:fomoless/features/timer/presentation/widget/time_display_widget.dart';
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
-
-  String twoDigits(int n) => n.toString().padLeft(2, '0');
 
   @override
   Widget build(BuildContext context) {
@@ -19,66 +18,7 @@ class TimerPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  InkWell(
-                    borderRadius: BorderRadius.circular(10.0),
-                    onDoubleTap: () {
-                      context.read<TimerBloc>().add(TimerReset());
-                    },
-                    onTap: () {
-                      context.read<TimerBloc>().add(TimerToggleMilliseconds());
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            twoDigits(state.hours),
-                            style: const TextStyle(fontSize: 60.0),
-                          ),
-                          const Text(":", style: TextStyle(fontSize: 60.0)),
-                          Text(
-                            twoDigits(state.minutes),
-                            style: const TextStyle(fontSize: 60.0),
-                          ),
-                          const Text(":", style: TextStyle(fontSize: 60.0)),
-                          Text(
-                            twoDigits(state.seconds),
-                            style: const TextStyle(fontSize: 60.0),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Visibility(
-                              visible: !state.hideMilliseconds,
-                              child: Row(
-                                children: [
-                                  const Text(
-                                    ".",
-                                    style: TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    state.milliseconds.toString().padLeft(
-                                      3,
-                                      '0',
-                                    ),
-                                    style: const TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  const TimeDisplayWidget(),
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
@@ -90,7 +30,7 @@ class TimerPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 50),
-                  InformationWidget(),
+                  const InformationWidget(),
                 ],
               ),
             ),
