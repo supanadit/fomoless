@@ -34,30 +34,6 @@ class TimerPage extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () {
                                 context.read<ModeBloc>().add(
-                                  ModeSwitchRequested(TimerMode.stopwatch),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    modeState.mode == TimerMode.stopwatch
-                                    ? Colors.grey.withAlpha(180)
-                                    : Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                surfaceTintColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(3.0),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: const Text(
-                                "Stopwatch",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.read<ModeBloc>().add(
                                   ModeSwitchRequested(TimerMode.pomodoro),
                                 );
                               },
@@ -75,6 +51,30 @@ class TimerPage extends StatelessWidget {
                               ),
                               child: const Text(
                                 "Pomodoro",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: () {
+                                context.read<ModeBloc>().add(
+                                  ModeSwitchRequested(TimerMode.stopwatch),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    modeState.mode == TimerMode.stopwatch
+                                    ? Colors.grey.withAlpha(180)
+                                    : Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                surfaceTintColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3.0),
+                                ),
+                                elevation: 0,
+                              ),
+                              child: const Text(
+                                "Stopwatch",
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),

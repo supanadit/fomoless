@@ -8,7 +8,7 @@ abstract class ModeState {
 class ModeInitialState extends ModeState {
   @override
   final TimerMode mode;
-  ModeInitialState({this.mode = TimerMode.stopwatch});
+  ModeInitialState({this.mode = TimerMode.pomodoro});
 }
 
 class ModeSelectedState extends ModeState {
