@@ -30,4 +30,6 @@ class TimerModeChanged extends TimerEvent {
 
 class TimerShortBreakRequested extends TimerEvent {}
 
+class TimerLongBreakRequested extends TimerEvent {}
+
 class TimerPhaseCompleted extends TimerEvent {}
