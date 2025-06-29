@@ -88,7 +88,7 @@ class TimerPage extends StatelessWidget {
                             context.read<TimerBloc>().add(TimerStarted());
                           },
                           child: Text(
-                            timerState.isRunning ? "Stop Timer" : "Start Timer",
+                            timerState.isRunning ? "Stop" : "Start",
                             style: const TextStyle(fontSize: 20.0),
                           ),
                         ),
