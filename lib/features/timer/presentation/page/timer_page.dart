@@ -1,166 +1,115 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
 
-class TimerPage extends StatefulWidget {
+class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
-
-  @override
-  State<TimerPage> createState() => _TimerPageState();
-}
-
-class _TimerPageState extends State<TimerPage> {
-  static const fontSizeTime = 60.0;
-
-  int hours = 0;
-  int minutes = 0;
-  int seconds = 0;
-  int milliseconds = 0;
-
-  bool isRunning = false;
-  bool hideMilliseconds = true;
-  Timer? _timer;
-
-  void startTimer() {
-    if (isRunning) {
-      _timer?.cancel();
-      setState(() {
-        isRunning = false;
-      });
-    } else {
-      setState(() {
-        isRunning = true;
-      });
-      _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-        setState(() {
-          milliseconds += 10;
-          if (milliseconds >= 1000) {
-            milliseconds = 0;
-            seconds++;
-          }
-          if (seconds >= 60) {
-            seconds = 0;
-            minutes++;
-          }
-          if (minutes >= 60) {
-            minutes = 0;
-            hours++;
-          }
-        });
-      });
-    }
-  }
-
-  void resetTimer() {
-    _timer?.cancel();
-    setState(() {
-      hours = 0;
-      minutes = 0;
-      seconds = 0;
-      milliseconds = 0;
-      isRunning = false;
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
 
   String twoDigits(int n) => n.toString().padLeft(2, '0');
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              borderRadius: BorderRadius.circular(10.0),
-              onDoubleTap: resetTimer,
-              onTap: () {
-                setState(() {
-                  hideMilliseconds = !hideMilliseconds;
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      twoDigits(hours),
-                      style: const TextStyle(fontSize: fontSizeTime),
+    return BlocProvider(
+      create: (_) => TimerBloc(),
+      child: BlocBuilder<TimerBloc, TimerState>(
+        builder: (context, state) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    borderRadius: BorderRadius.circular(10.0),
+                    onDoubleTap: () =>
+                        context.read<TimerBloc>().add(TimerReset()),
+                    onTap: () => context.read<TimerBloc>().add(
+                      TimerToggleMilliseconds(),
                     ),
-                    const Text(":", style: TextStyle(fontSize: fontSizeTime)),
-                    Text(
-                      twoDigits(minutes),
-                      style: const TextStyle(fontSize: fontSizeTime),
-                    ),
-                    const Text(":", style: TextStyle(fontSize: fontSizeTime)),
-                    Text(
-                      twoDigits(seconds),
-                      style: const TextStyle(fontSize: fontSizeTime),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 10.0),
-                      child: Visibility(
-                        visible: !hideMilliseconds,
-                        child: Row(
-                          children: [
-                            const Text(
-                              ".",
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.grey,
+                    child: Container(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            twoDigits(state.hours),
+                            style: const TextStyle(fontSize: 60.0),
+                          ),
+                          const Text(":", style: TextStyle(fontSize: 60.0)),
+                          Text(
+                            twoDigits(state.minutes),
+                            style: const TextStyle(fontSize: 60.0),
+                          ),
+                          const Text(":", style: TextStyle(fontSize: 60.0)),
+                          Text(
+                            twoDigits(state.seconds),
+                            style: const TextStyle(fontSize: 60.0),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Visibility(
+                              visible: !state.hideMilliseconds,
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    ".",
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Text(
+                                    state.milliseconds.toString().padLeft(
+                                      3,
+                                      '0',
+                                    ),
+                                    style: const TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Text(
-                              milliseconds.toString().padLeft(3, '0'),
-                              style: const TextStyle(
-                                fontSize: 30,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () =>
+                        context.read<TimerBloc>().add(TimerStarted()),
+                    child: Text(
+                      state.isRunning ? "Stop Timer" : "Start Timer",
+                      style: const TextStyle(fontSize: 20.0),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Information:",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        "1. To reset the timer, double tap on the time display.",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        "2. To toggle milliseconds, tap on the time display.",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: startTimer,
-              child: Text(
-                isRunning ? "Stop Timer" : "Start Timer",
-                style: const TextStyle(fontSize: 20.0),
-              ),
-            ),
-            const SizedBox(height: 50),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Light gray text for information
-                Text("Information:", style: TextStyle(color: Colors.grey)),
-                Text(
-                  "1. To reset the timer, double tap on the time display.",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Text(
-                  "2. To toggle milliseconds, tap on the time display.",
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
