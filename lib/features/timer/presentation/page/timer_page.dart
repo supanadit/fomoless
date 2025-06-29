@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fomoless/features/timer/presentation/bloc/mode_bloc.dart';
 import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
 import 'package:fomoless/features/timer/presentation/widget/information_widget.dart';
+import 'package:fomoless/features/timer/presentation/widget/time_mode_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_display_widget.dart';
 
 class TimerPage extends StatelessWidget {
@@ -29,63 +30,13 @@ class TimerPage extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      context.read<ModeBloc>().add(
-                                        ModeSwitchRequested(TimerMode.pomodoro),
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          modeState.mode == TimerMode.pomodoro
-                                          ? Colors.grey.withAlpha(180)
-                                          : Colors.transparent,
-                                      shadowColor: Colors.transparent,
-                                      surfaceTintColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          3.0,
-                                        ),
-                                      ),
-                                      elevation: 0,
-                                    ),
-                                    child: const Text(
-                                      "Pomodoro",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      context.read<ModeBloc>().add(
-                                        ModeSwitchRequested(
-                                          TimerMode.stopwatch,
-                                        ),
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          modeState.mode == TimerMode.stopwatch
-                                          ? Colors.grey.withAlpha(180)
-                                          : Colors.transparent,
-                                      shadowColor: Colors.transparent,
-                                      surfaceTintColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          3.0,
-                                        ),
-                                      ),
-                                      elevation: 0,
-                                    ),
-                                    child: const Text(
-                                      "Stopwatch",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                ],
+                              TimeModeWidget(
+                                selectedMode: modeState.mode,
+                                onModeSelected: (mode) {
+                                  context.read<ModeBloc>().add(
+                                    ModeSwitchRequested(mode),
+                                  );
+                                },
                               ),
                               const SizedBox(height: 20),
                               const TimeDisplayWidget(),
