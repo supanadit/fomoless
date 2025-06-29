@@ -31,9 +31,7 @@ class TimerActionWidget extends StatelessWidget {
           const SizedBox(width: 16),
           ElevatedButton(
             onPressed: () {
-              if (timerState.phase == TimerPhase.pomodoro) {
-                context.read<TimerBloc>().add(TimerShortBreakRequested());
-              } else if (timerState.phase == TimerPhase.shortBreak) {
+              if (timerState.phase == TimerPhase.pomodoro || timerState.phase == TimerPhase.shortBreak) {
                 context.read<TimerBloc>().add(TimerShortBreakRequested());
               } else if (timerState.phase == TimerPhase.longBreak) {
                 context.read<TimerBloc>().add(TimerLongBreakRequested());
