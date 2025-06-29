@@ -54,12 +54,24 @@ class TimerPage extends StatelessWidget {
                               const SizedBox(height: 50),
                               const InformationWidget(),
                               const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () => context.go('/tasks'),
-                                child: const Text(
-                                  "Go To Tasks",
-                                  style: TextStyle(fontSize: 20.0),
-                                ),
+                            ],
+                          ),
+                        ),
+                        bottomNavigationBar: BottomAppBar(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.timer),
+                                onPressed: () {
+                                  context.go('/'); // Navigate to Timer Page
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.task),
+                                onPressed: () {
+                                  context.go('/tasks'); // Navigate to Task Page
+                                },
                               ),
                             ],
                           ),
