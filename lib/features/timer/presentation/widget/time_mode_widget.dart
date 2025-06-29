@@ -11,42 +11,30 @@ class TimeModeWidget extends StatelessWidget {
     required this.onModeSelected,
   });
 
+  Widget _buildModeButton({required String label, required TimerMode mode}) {
+    return ElevatedButton(
+      onPressed: () => onModeSelected(mode),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: selectedMode == mode
+            ? Colors.grey.withAlpha(180)
+            : Colors.transparent,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+        elevation: 0,
+      ),
+      child: Text(label, style: const TextStyle(color: Colors.black)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(
-          onPressed: () => onModeSelected(TimerMode.pomodoro),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: selectedMode == TimerMode.pomodoro
-                ? Colors.grey.withAlpha(180)
-                : Colors.transparent,
-            shadowColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(3.0),
-            ),
-            elevation: 0,
-          ),
-          child: const Text("Pomodoro", style: TextStyle(color: Colors.black)),
-        ),
+        _buildModeButton(label: "Pomodoro", mode: TimerMode.pomodoro),
         const SizedBox(width: 10),
-        ElevatedButton(
-          onPressed: () => onModeSelected(TimerMode.stopwatch),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: selectedMode == TimerMode.stopwatch
-                ? Colors.grey.withAlpha(180)
-                : Colors.transparent,
-            shadowColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(3.0),
-            ),
-            elevation: 0,
-          ),
-          child: const Text("Stopwatch", style: TextStyle(color: Colors.black)),
-        ),
+        _buildModeButton(label: "Stopwatch", mode: TimerMode.stopwatch),
       ],
     );
   }
