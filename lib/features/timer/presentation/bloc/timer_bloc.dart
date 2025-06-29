@@ -55,9 +55,27 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
                 10;
             if (totalMs <= 0) {
               _timer?.cancel();
-              add(
-                TimerTicked(hours: 0, minutes: 0, seconds: 0, milliseconds: 0),
-              );
+              // Reset to initial state based on current mode instead of zero
+              if (_currentMode == TimerMode.pomodoro) {
+                final initialState = TimerState.initialPomodoro();
+                add(
+                  TimerTicked(
+                    hours: initialState.hours,
+                    minutes: initialState.minutes,
+                    seconds: initialState.seconds,
+                    milliseconds: initialState.milliseconds,
+                  ),
+                );
+              } else {
+                add(
+                  TimerTicked(
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    milliseconds: 0,
+                  ),
+                );
+              }
               add(TimerStopped());
               return;
             }
