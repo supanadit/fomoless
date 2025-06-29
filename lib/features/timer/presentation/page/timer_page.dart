@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
+import 'package:fomoless/features/timer/presentation/widget/information_widget.dart';
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -20,11 +21,12 @@ class TimerPage extends StatelessWidget {
                 children: [
                   InkWell(
                     borderRadius: BorderRadius.circular(10.0),
-                    onDoubleTap: () =>
-                        context.read<TimerBloc>().add(TimerReset()),
-                    onTap: () => context.read<TimerBloc>().add(
-                      TimerToggleMilliseconds(),
-                    ),
+                    onDoubleTap: () {
+                      context.read<TimerBloc>().add(TimerReset());
+                    },
+                    onTap: () {
+                      context.read<TimerBloc>().add(TimerToggleMilliseconds());
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(20.0),
                       child: Row(
@@ -79,32 +81,16 @@ class TimerPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () =>
-                        context.read<TimerBloc>().add(TimerStarted()),
+                    onPressed: () {
+                      context.read<TimerBloc>().add(TimerStarted());
+                    },
                     child: Text(
                       state.isRunning ? "Stop Timer" : "Start Timer",
                       style: const TextStyle(fontSize: 20.0),
                     ),
                   ),
                   const SizedBox(height: 50),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Information:",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      Text(
-                        "1. To reset the timer, double tap on the time display.",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      Text(
-                        "2. To toggle milliseconds, tap on the time display.",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
+                  InformationWidget(),
                 ],
               ),
             ),
