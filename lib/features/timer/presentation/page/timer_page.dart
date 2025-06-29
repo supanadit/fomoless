@@ -15,6 +15,7 @@ class _TimerPageState extends State<TimerPage> {
   int hours = 0;
   int minutes = 0;
   int seconds = 0;
+  int milliseconds = 0;
 
   bool isRunning = false;
   Timer? _timer;
@@ -29,9 +30,13 @@ class _TimerPageState extends State<TimerPage> {
       setState(() {
         isRunning = true;
       });
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
         setState(() {
-          seconds++;
+          milliseconds += 10;
+          if (milliseconds >= 1000) {
+            milliseconds = 0;
+            seconds++;
+          }
           if (seconds >= 60) {
             seconds = 0;
             minutes++;
@@ -43,6 +48,17 @@ class _TimerPageState extends State<TimerPage> {
         });
       });
     }
+  }
+
+  void resetTimer() {
+    _timer?.cancel();
+    setState(() {
+      hours = 0;
+      minutes = 0;
+      seconds = 0;
+      milliseconds = 0;
+      isRunning = false;
+    });
   }
 
   @override
@@ -60,25 +76,33 @@ class _TimerPageState extends State<TimerPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  twoDigits(hours),
-                  style: const TextStyle(fontSize: fontSizeTime),
-                ),
-                const Text(":", style: TextStyle(fontSize: fontSizeTime)),
-                Text(
-                  twoDigits(minutes),
-                  style: const TextStyle(fontSize: fontSizeTime),
-                ),
-                const Text(":", style: TextStyle(fontSize: fontSizeTime)),
-                Text(
-                  twoDigits(seconds),
-                  style: const TextStyle(fontSize: fontSizeTime),
-                ),
-              ],
+            GestureDetector(
+              onDoubleTap: resetTimer,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    twoDigits(hours),
+                    style: const TextStyle(fontSize: fontSizeTime),
+                  ),
+                  const Text(":", style: TextStyle(fontSize: fontSizeTime)),
+                  Text(
+                    twoDigits(minutes),
+                    style: const TextStyle(fontSize: fontSizeTime),
+                  ),
+                  const Text(":", style: TextStyle(fontSize: fontSizeTime)),
+                  Text(
+                    twoDigits(seconds),
+                    style: const TextStyle(fontSize: fontSizeTime),
+                  ),
+                  const Text(".", style: TextStyle(fontSize: fontSizeTime)),
+                  Text(
+                    milliseconds.toString().padLeft(3, '0'),
+                    style: const TextStyle(fontSize: fontSizeTime),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -87,6 +111,19 @@ class _TimerPageState extends State<TimerPage> {
                 isRunning ? "Stop Timer" : "Start Timer",
                 style: const TextStyle(fontSize: 20.0),
               ),
+            ),
+            const SizedBox(height: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Light gray text for information
+                Text("Information:", style: TextStyle(color: Colors.grey)),
+                Text(
+                  "To reset the timer, double tap on the time display.",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
             ),
           ],
         ),
