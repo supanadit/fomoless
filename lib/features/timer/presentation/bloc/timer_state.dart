@@ -1,6 +1,6 @@
 part of 'timer_bloc.dart';
 
-enum TimerPhase { pomodoro, shortBreak, stopwatch }
+enum TimerPhase { pomodoro, shortBreak, longBreak, stopwatch }
 
 class TimerState {
   final int hours;
@@ -49,6 +49,16 @@ class TimerState {
     isRunning: false,
     hideMilliseconds: true,
     phase: TimerPhase.shortBreak,
+  );
+
+  factory TimerState.initialLongBreak() => TimerState(
+    hours: 0,
+    minutes: 15,
+    seconds: 0,
+    milliseconds: 0,
+    isRunning: false,
+    hideMilliseconds: true,
+    phase: TimerPhase.longBreak,
   );
 
   TimerState copyWith({

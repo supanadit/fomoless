@@ -31,14 +31,19 @@ class TimerActionWidget extends StatelessWidget {
           const SizedBox(width: 16),
           ElevatedButton(
             onPressed: () {
-              context.read<TimerBloc>().add(TimerShortBreakRequested());
+              if (timerState.phase == TimerPhase.pomodoro || timerState.phase == TimerPhase.shortBreak) {
+                context.read<TimerBloc>().add(TimerShortBreakRequested());
+              } else if (timerState.phase == TimerPhase.longBreak) {
+                context.read<TimerBloc>().add(TimerLongBreakRequested());
+              }
             },
             child: Text(
               timerState.isRunning
                   ? "Done"
-                  : (timerState.phase == TimerPhase.shortBreak
+                  : (timerState.phase == TimerPhase.shortBreak ||
+                            timerState.phase == TimerPhase.longBreak
                         ? "Skip Break"
-                        : "Short Break"),
+                        : "Break"),
               style: const TextStyle(fontSize: 16.0),
             ),
           ),
