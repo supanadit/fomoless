@@ -74,12 +74,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       _timer?.cancel();
       if (_currentMode == TimerMode.pomodoro) {
         emit(
-          TimerState(
-            hours: 0,
-            minutes: 25,
-            seconds: 0,
-            milliseconds: 0,
-            isRunning: false,
+          TimerState.initialPomodoro().copyWith(
             hideMilliseconds: state.hideMilliseconds,
           ),
         );
@@ -130,12 +125,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       _timer?.cancel();
       if (_currentMode == TimerMode.pomodoro) {
         emit(
-          TimerState(
-            hours: 0,
-            minutes: 25,
-            seconds: 0,
-            milliseconds: 0,
-            isRunning: false,
+          TimerState.initialPomodoro().copyWith(
             hideMilliseconds: state.hideMilliseconds,
           ),
         );
