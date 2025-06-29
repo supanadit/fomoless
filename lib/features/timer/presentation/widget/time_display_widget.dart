@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/timer_bloc.dart';
+import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
+import 'package:fomoless/features/timer/presentation/widget/time_unit_widget.dart';
 
 class TimeDisplayWidget extends StatelessWidget {
   const TimeDisplayWidget({super.key});
@@ -26,20 +27,11 @@ class TimeDisplayWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  twoDigits(state.hours),
-                  style: const TextStyle(fontSize: 60.0),
-                ),
+                TimeUnitWidget(value: twoDigits(state.hours)),
                 const Text(":", style: TextStyle(fontSize: 60.0)),
-                Text(
-                  twoDigits(state.minutes),
-                  style: const TextStyle(fontSize: 60.0),
-                ),
+                TimeUnitWidget(value: twoDigits(state.minutes)),
                 const Text(":", style: TextStyle(fontSize: 60.0)),
-                Text(
-                  twoDigits(state.seconds),
-                  style: const TextStyle(fontSize: 60.0),
-                ),
+                TimeUnitWidget(value: twoDigits(state.seconds)),
                 Container(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Visibility(
