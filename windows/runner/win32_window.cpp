@@ -206,7 +206,13 @@ Win32Window::MessageHandler(HWND hwnd,
       }
       return 0;
     }
-
+    case WM_GETMINMAXINFO: {
+      // Set minimum window size to 768x768
+      auto minmax_info = reinterpret_cast<MINMAXINFO*>(lparam);
+      minmax_info->ptMinTrackSize.x = 768;
+      minmax_info->ptMinTrackSize.y = 768;
+      return 0;
+    }
     case WM_ACTIVATE:
       if (child_content_ != nullptr) {
         SetFocus(child_content_);
