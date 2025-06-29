@@ -19,6 +19,9 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   Timer? _timer;
   TimerMode _currentMode;
   int _countUpMilliseconds = 0; // Track count up milliseconds separately
+  DateTime? _startTime; // For accurate timing
+  int _initialCountdownMs = 0; // For countdown mode
+  Stopwatch? _stopwatch; // For stopwatch mode
 
   TimerBloc(TimerMode initialMode)
     : _currentMode = initialMode,
@@ -55,31 +58,38 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   void _onTimerStarted(TimerStarted event, Emitter<TimerState> emit) {
     if (state.isRunning) {
       _timer?.cancel();
+      _stopwatch?.stop();
       emit(state.copyWith(isRunning: false));
     } else {
       emit(state.copyWith(isRunning: true));
-
-      // Use mode to determine count direction
       final isCountDown = _currentMode == TimerMode.pomodoro;
-
-      if (!isCountDown) {
-        // Stopwatch: continue from current count up value
-        _countUpMilliseconds =
+      if (isCountDown) {
+        // Countdown: record start time and initial ms
+        _startTime = DateTime.now();
+        _initialCountdownMs =
             state.hours * 3600000 +
             state.minutes * 60000 +
             state.seconds * 1000 +
             state.milliseconds;
-      }
-
-      _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-        if (isCountDown) {
-          // Count down
-          int totalMs =
+      } else {
+        // Stopwatch: start or resume
+        _stopwatch ??= Stopwatch();
+        if (!_stopwatch!.isRunning) {
+          _stopwatch!.start();
+        }
+        if (_countUpMilliseconds == 0) {
+          _countUpMilliseconds =
               state.hours * 3600000 +
               state.minutes * 60000 +
               state.seconds * 1000 +
-              state.milliseconds -
-              10;
+              state.milliseconds;
+        }
+      }
+      _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+        if (isCountDown) {
+          final now = DateTime.now();
+          final elapsed = now.difference(_startTime!).inMilliseconds;
+          int totalMs = _initialCountdownMs - elapsed;
           if (totalMs <= 0) {
             _timer?.cancel();
             // Transition to the next phase, but do not auto-start
@@ -88,7 +98,6 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
             } else if (state.phase == TimerPhase.shortBreak) {
               add(TimerPhaseCompleted());
             } else {
-              // For other modes, reset to initial state
               if (_currentMode == TimerMode.pomodoro) {
                 final initialState = TimerState.initialPomodoro();
                 add(
@@ -119,12 +128,13 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
           int ms = totalMs % 1000;
           add(TimerTicked(hours: h, minutes: m, seconds: s, milliseconds: ms));
         } else {
-          // Count up
-          _countUpMilliseconds += 10;
-          int ms = _countUpMilliseconds % 1000;
-          int s = (_countUpMilliseconds ~/ 1000) % 60;
-          int m = (_countUpMilliseconds ~/ 60000) % 60;
-          int h = _countUpMilliseconds ~/ 3600000;
+          // Stopwatch: use actual elapsed time
+          final elapsed =
+              _stopwatch!.elapsedMilliseconds + _countUpMilliseconds;
+          int ms = elapsed % 1000;
+          int s = (elapsed ~/ 1000) % 60;
+          int m = (elapsed ~/ 60000) % 60;
+          int h = elapsed ~/ 3600000;
           add(TimerTicked(hours: h, minutes: m, seconds: s, milliseconds: ms));
         }
       });
@@ -133,12 +143,16 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   void _onTimerStopped(TimerStopped event, Emitter<TimerState> emit) {
     _timer?.cancel();
+    _stopwatch?.stop();
     emit(state.copyWith(isRunning: false));
   }
 
   void _onTimerReset(TimerReset event, Emitter<TimerState> emit) {
     _timer?.cancel();
+    _stopwatch?.reset();
     _countUpMilliseconds = 0;
+    _startTime = null;
+    _initialCountdownMs = 0;
     if (_currentMode == TimerMode.pomodoro) {
       emit(
         TimerState.initialPomodoro().copyWith(
