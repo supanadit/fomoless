@@ -5,6 +5,7 @@ import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
 import 'package:fomoless/features/timer/presentation/widget/information_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_mode_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_display_widget.dart';
+import 'package:fomoless/features/timer/presentation/widget/timer_action_widget.dart';
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -66,40 +67,9 @@ class TimerPage extends StatelessWidget {
                               ),
                               if (timerState.phase != TimerPhase.stopwatch)
                                 const SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      context.read<TimerBloc>().add(
-                                        TimerStarted(),
-                                      );
-                                    },
-                                    child: Text(
-                                      timerState.isRunning ? "Stop" : "Start",
-                                      style: const TextStyle(fontSize: 20.0),
-                                    ),
-                                  ),
-                                  if (modeState.mode == TimerMode.pomodoro)
-                                    const SizedBox(width: 16),
-                                  if (modeState.mode == TimerMode.pomodoro)
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        context.read<TimerBloc>().add(
-                                          TimerShortBreakRequested(),
-                                        );
-                                      },
-                                      child: Text(
-                                        timerState.isRunning
-                                            ? "Done"
-                                            : (timerState.phase ==
-                                                      TimerPhase.shortBreak
-                                                  ? "Skip Break"
-                                                  : "Short Break"),
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                    ),
-                                ],
+                              TimerActionWidget(
+                                timerState: timerState,
+                                modeState: modeState,
                               ),
                               const SizedBox(height: 50),
                               const InformationWidget(),
