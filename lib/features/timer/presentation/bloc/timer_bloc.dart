@@ -2,18 +2,11 @@ import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fomoless/constants.dart';
 import 'package:fomoless/features/timer/presentation/bloc/mode_bloc.dart';
-import 'package:stream_transform/stream_transform.dart';
 
 part 'timer_event.dart';
 part 'timer_state.dart';
-
-// Throttle event transformer to prevent excessive UI updates
-EventTransformer<E> throttle<E>(Duration duration) {
-  return (events, mapper) {
-    return events.throttle(duration).switchMap(mapper);
-  };
-}
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
   Timer? _timer;
@@ -37,10 +30,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TimerReset>(_onTimerReset, transformer: droppable());
 
     // Use throttle to prevent excessive UI updates on slow devices
-    on<TimerTicked>(
-      _onTimerTicked,
-      transformer: throttle(const Duration(milliseconds: 15)),
-    );
+    on<TimerTicked>(_onTimerTicked);
 
     // Use droppable for these less time-sensitive events to prevent queuing
     on<TimerToggleMilliseconds>(
