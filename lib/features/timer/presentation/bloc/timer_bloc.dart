@@ -93,46 +93,30 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
             if (state.phase == TimerPhase.pomodoro) {
               _pomodoroCount++;
               if (_pomodoroCount % POMODORO_LONG_BREAK_THRESHOLD == 0) {
-                sl<FlutterLocalNotificationsPlugin>().show(
-                  0,
+                _showPhaseNotification(
                   'Pomodoro Finished!',
                   'Now take a long break.',
-                  const NotificationDetails(
-                    windows: WindowsNotificationDetails(),
-                  ),
+                  TimerLongBreakRequested(),
                 );
-                add(TimerLongBreakRequested());
               } else {
-                sl<FlutterLocalNotificationsPlugin>().show(
-                  0,
+                _showPhaseNotification(
                   'Pomodoro Finished!',
                   'Now take a short break.',
-                  const NotificationDetails(
-                    windows: WindowsNotificationDetails(),
-                  ),
+                  TimerShortBreakRequested(),
                 );
-                add(TimerShortBreakRequested());
               }
             } else if (state.phase == TimerPhase.shortBreak) {
-              sl<FlutterLocalNotificationsPlugin>().show(
-                0,
+              _showPhaseNotification(
                 'Break Finished!',
                 'Now get back and start a new pomodoro.',
-                const NotificationDetails(
-                  windows: WindowsNotificationDetails(),
-                ),
+                TimerPhaseCompleted(),
               );
-              add(TimerPhaseCompleted());
             } else if (state.phase == TimerPhase.longBreak) {
-              sl<FlutterLocalNotificationsPlugin>().show(
-                0,
+              _showPhaseNotification(
                 'Break Finished!',
                 'Now get back and start a new pomodoro.',
-                const NotificationDetails(
-                  windows: WindowsNotificationDetails(),
-                ),
+                TimerPhaseCompleted(),
               );
-              add(TimerPhaseCompleted());
             } else {
               if (_currentMode == TimerMode.pomodoro) {
                 final initialState = TimerState.initialPomodoro();
