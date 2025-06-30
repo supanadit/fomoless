@@ -1,4 +1,4 @@
-package com.example.fomoless
+package com.supanadit.fomoless
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fomoless/features/task/presentation/page/task_page.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fomoless/di.dart';
 import 'package:fomoless/features/timer/presentation/page/timer_page.dart';
 import 'package:go_router/go_router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  initializeDependencies();
+
+  await sl<FlutterLocalNotificationsPlugin>().initialize(
+    sl<InitializationSettings>(),
+  );
   runApp(const MyApp());
 }
 
