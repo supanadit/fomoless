@@ -113,26 +113,11 @@ class _TimerPageState extends State<TimerPage> {
                               ],
                             ),
                           ),
-                          bottomNavigationBar: BottomAppBar(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.timer),
-                                  onPressed: () {
-                                    context.go('/'); // Navigate to Timer Page
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.task),
-                                  onPressed: () {
-                                    context.go(
-                                      '/tasks',
-                                    ); // Navigate to Task Page
-                                  },
-                                ),
-                              ],
-                            ),
+                          floatingActionButton: FloatingActionButton(
+                            onPressed: () {
+                              context.go('/tasks');
+                            },
+                            child: const Icon(Icons.task),
                           ),
                         ),
                       );
