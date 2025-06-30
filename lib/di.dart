@@ -16,7 +16,14 @@ void initializeDependencies() {
     ),
   );
 
+  sl.registerLazySingleton<AndroidInitializationSettings>(
+    () => const AndroidInitializationSettings('@mipmap/ic_launcher'),
+  );
+
   sl.registerLazySingleton<InitializationSettings>(
-    () => InitializationSettings(windows: sl<WindowsInitializationSettings>()),
+    () => InitializationSettings(
+      android: sl<AndroidInitializationSettings>(),
+      windows: sl<WindowsInitializationSettings>(),
+    ),
   );
 }
