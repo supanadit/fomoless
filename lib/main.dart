@@ -6,10 +6,15 @@ import 'package:fomoless/features/timer/presentation/page/timer_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initializeDependencies();
-  await sl<FlutterLocalNotificationsPlugin>().initialize(
-    sl<InitializationSettings>(),
-  );
-  runApp(MyApp());
+  try {
+    await sl<FlutterLocalNotificationsPlugin>().initialize(
+      sl<InitializationSettings>(),
+    );
+  } catch (e) {
+    print('Error initializing notifications: $e');
+    // Optionally, handle the failure gracefully here
+  }
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
