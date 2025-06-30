@@ -18,6 +18,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   int _initialCountdownMs = 0; // For countdown mode
   Stopwatch? _stopwatch; // For stopwatch mode
   int _pomodoroCount = 0; // Track completed pomodoros
+  int _notificationId = 0; // Unique ID for notifications
 
   TimerBloc(TimerMode initialMode)
     : _currentMode = initialMode,
@@ -50,6 +51,30 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     );
 
     on<TimerPhaseCompleted>(_onPhaseCompleted, transformer: droppable());
+  }
+
+  _showPhaseNotification(String title, String body, TimerEvent event) async {
+    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'timer_channel',
+      'Timer Notifications',
+      channelDescription: 'Notifications for timer phases',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+
+    const platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+
+    await sl<FlutterLocalNotificationsPlugin>().show(
+      _notificationId++,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
+
+    add(event); // Trigger the next event after showing notification
   }
 
   void _onTimerStarted(TimerStarted event, Emitter<TimerState> emit) {
