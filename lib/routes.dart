@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fomoless/features/dashboard/presentation/page/dashboard_page.dart';
+import 'package:fomoless/features/setting/presentation/page/setting_page.dart';
 import 'package:fomoless/features/task/presentation/page/task_page.dart';
 import 'package:fomoless/features/timer/presentation/page/timer_page.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +23,12 @@ final GoRouter routes = GoRouter(
           path: 'tasks',
           builder: (BuildContext context, GoRouterState state) {
             return const TaskPage();
+          },
+        ),
+        GoRoute(
+          path: 'settings',
+          builder: (BuildContext context, GoRouterState state) {
+            return const SettingPage();
           },
         ),
       ],

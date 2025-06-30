@@ -130,10 +130,16 @@ class _TimerPageState extends State<TimerPage> {
                               ),
                             ],
                             onTap: (index) {
-                              if (index == 1) {
-                                context.go('/dashboard');
-                              } else if (index == 2) {
-                                context.go('/tasks');
+                              switch (index) {
+                                case 0:
+                                  // Already on Timer page, do nothing
+                                  break;
+                                case 1:
+                                  context.go('/dashboard');
+                                  break;
+                                case 2:
+                                  context.go('/tasks');
+                                  break;
                               }
                             },
                           ),
