@@ -9,7 +9,7 @@ void main() async {
   await sl<FlutterLocalNotificationsPlugin>().initialize(
     sl<InitializationSettings>(),
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
