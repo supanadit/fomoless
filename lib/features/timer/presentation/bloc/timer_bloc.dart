@@ -2,18 +2,11 @@ import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fomoless/constants.dart';
 import 'package:fomoless/features/timer/presentation/bloc/mode_bloc.dart';
-import 'package:stream_transform/stream_transform.dart';
 
 part 'timer_event.dart';
 part 'timer_state.dart';
-
-// Throttle event transformer to prevent excessive UI updates
-EventTransformer<E> throttle<E>(Duration duration) {
-  return (events, mapper) {
-    return events.throttle(duration).switchMap(mapper);
-  };
-}
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
   Timer? _timer;
@@ -22,6 +15,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   DateTime? _startTime; // For accurate timing
   int _initialCountdownMs = 0; // For countdown mode
   Stopwatch? _stopwatch; // For stopwatch mode
+  int _pomodoroCount = 0; // Track completed pomodoros
 
   TimerBloc(TimerMode initialMode)
     : _currentMode = initialMode,
@@ -36,10 +30,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TimerReset>(_onTimerReset, transformer: droppable());
 
     // Use throttle to prevent excessive UI updates on slow devices
-    on<TimerTicked>(
-      _onTimerTicked,
-      transformer: throttle(const Duration(milliseconds: 15)),
-    );
+    on<TimerTicked>(_onTimerTicked);
 
     // Use droppable for these less time-sensitive events to prevent queuing
     on<TimerToggleMilliseconds>(
@@ -49,6 +40,10 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TimerModeChanged>(_onModeChanged, transformer: droppable());
     on<TimerShortBreakRequested>(
       _onShortBreakRequested,
+      transformer: droppable(),
+    );
+    on<TimerLongBreakRequested>(
+      _onLongBreakRequested,
       transformer: droppable(),
     );
 
@@ -94,8 +89,15 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
             _timer?.cancel();
             // Transition to the next phase, but do not auto-start
             if (state.phase == TimerPhase.pomodoro) {
-              add(TimerShortBreakRequested());
+              _pomodoroCount++;
+              if (_pomodoroCount % POMODORO_LONG_BREAK_THRESHOLD == 0) {
+                add(TimerLongBreakRequested());
+              } else {
+                add(TimerShortBreakRequested());
+              }
             } else if (state.phase == TimerPhase.shortBreak) {
+              add(TimerPhaseCompleted());
+            } else if (state.phase == TimerPhase.longBreak) {
               add(TimerPhaseCompleted());
             } else {
               if (_currentMode == TimerMode.pomodoro) {
@@ -190,8 +192,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _currentMode = event.mode;
     _timer?.cancel();
     _countUpMilliseconds = 0;
-
-    // Reset timer state based on current mode
+    // Do NOT reset _pomodoroCount here, so the cycle continues correctly
     if (_currentMode == TimerMode.pomodoro) {
       emit(
         TimerState.initialPomodoro().copyWith(
@@ -232,8 +233,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       );
     } else {
       // Switch to short break
-      _currentMode = TimerMode
-          .pomodoro; // Keep the mode as pomodoro, just change the phase
+      _currentMode = TimerMode.pomodoro;
       emit(
         TimerState.initialShortBreak().copyWith(
           hideMilliseconds: state.hideMilliseconds,
@@ -242,9 +242,36 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     }
   }
 
+  void _onLongBreakRequested(
+    TimerLongBreakRequested event,
+    Emitter<TimerState> emit,
+  ) {
+    _timer?.cancel();
+    _countUpMilliseconds = 0;
+    if (state.phase == TimerPhase.longBreak) {
+      // Switch back to pomodoro
+      _currentMode = TimerMode.pomodoro;
+      emit(
+        TimerState.initialPomodoro().copyWith(
+          hideMilliseconds: state.hideMilliseconds,
+        ),
+      );
+      return;
+    } else {
+      emit(
+        TimerState.initialLongBreak().copyWith(
+          hideMilliseconds: state.hideMilliseconds,
+        ),
+      );
+    }
+  }
+
   void _onPhaseCompleted(TimerPhaseCompleted event, Emitter<TimerState> emit) {
-    // When short break is completed, switch to pomodoro
+    // When short or long break is completed, switch to pomodoro
     _currentMode = TimerMode.pomodoro;
+    if (state.phase == TimerPhase.longBreak) {
+      _pomodoroCount = 0; // Reset after long break only
+    }
     emit(
       TimerState.initialPomodoro().copyWith(
         hideMilliseconds: state.hideMilliseconds,

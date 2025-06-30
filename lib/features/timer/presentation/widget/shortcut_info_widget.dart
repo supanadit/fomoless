@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class InformationWidget extends StatelessWidget {
-  const InformationWidget({super.key});
+class ShortcutInfoWidget extends StatelessWidget {
+  const ShortcutInfoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,17 +12,13 @@ class InformationWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
-          Text("Information:", style: TextStyle(color: Colors.grey)),
+          Text("Keyboard Shortcut:", style: TextStyle(color: Colors.grey)),
           Text(
-            "1. To reset the timer, double tap on the time display.",
+            "1. To start/stop the timer, press Space.",
             style: TextStyle(color: Colors.grey),
           ),
           Text(
-            "2. To toggle milliseconds, tap on the time display.",
-            style: TextStyle(color: Colors.grey),
-          ),
-          Text(
-            "3. In pomodoro mode with natural completion, after four times you will get a long break.",
+            "2. In Pomodoro mode, press Enter to go to the next phase.",
             style: TextStyle(color: Colors.grey),
           ),
         ],
