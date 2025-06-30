@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fomoless/di.dart';
 import 'package:fomoless/features/timer/presentation/page/timer_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  initializeDependencies();
+  try {
+    await sl<FlutterLocalNotificationsPlugin>().initialize(
+      sl<InitializationSettings>(),
+    );
+  } catch (e) {
+    print('Error initializing notifications: $e');
+    // Optionally, handle the failure gracefully here
+  }
   runApp(const MyApp());
 }
 
@@ -12,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Fomoless',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),

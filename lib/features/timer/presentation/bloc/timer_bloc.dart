@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fomoless/constants.dart';
+import 'package:fomoless/di.dart';
 import 'package:fomoless/features/timer/presentation/bloc/mode_bloc.dart';
 
 part 'timer_event.dart';
@@ -16,6 +18,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   int _initialCountdownMs = 0; // For countdown mode
   Stopwatch? _stopwatch; // For stopwatch mode
   int _pomodoroCount = 0; // Track completed pomodoros
+  int _notificationId = 0; // Unique ID for notifications
 
   TimerBloc(TimerMode initialMode)
     : _currentMode = initialMode,
@@ -48,6 +51,30 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     );
 
     on<TimerPhaseCompleted>(_onPhaseCompleted, transformer: droppable());
+  }
+
+  _showPhaseNotification(String title, String body, TimerEvent event) async {
+    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'timer_channel',
+      'Timer Notifications',
+      channelDescription: 'Notifications for timer phases',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+
+    const platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+
+    await sl<FlutterLocalNotificationsPlugin>().show(
+      _notificationId++,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
+
+    add(event); // Trigger the next event after showing notification
   }
 
   void _onTimerStarted(TimerStarted event, Emitter<TimerState> emit) {
@@ -91,14 +118,30 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
             if (state.phase == TimerPhase.pomodoro) {
               _pomodoroCount++;
               if (_pomodoroCount % POMODORO_LONG_BREAK_THRESHOLD == 0) {
-                add(TimerLongBreakRequested());
+                _showPhaseNotification(
+                  'Pomodoro Finished!',
+                  'Now take a long break.',
+                  TimerLongBreakRequested(),
+                );
               } else {
-                add(TimerShortBreakRequested());
+                _showPhaseNotification(
+                  'Pomodoro Finished!',
+                  'Now take a short break.',
+                  TimerShortBreakRequested(),
+                );
               }
             } else if (state.phase == TimerPhase.shortBreak) {
-              add(TimerPhaseCompleted());
+              _showPhaseNotification(
+                'Break Finished!',
+                'Now get back and start a new pomodoro.',
+                TimerPhaseCompleted(),
+              );
             } else if (state.phase == TimerPhase.longBreak) {
-              add(TimerPhaseCompleted());
+              _showPhaseNotification(
+                'Break Finished!',
+                'Now get back and start a new pomodoro.',
+                TimerPhaseCompleted(),
+              );
             } else {
               if (_currentMode == TimerMode.pomodoro) {
                 final initialState = TimerState.initialPomodoro();
