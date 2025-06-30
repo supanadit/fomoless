@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fomoless/features/task/presentation/widget/task_item_widget.dart';
-import 'package:go_router/go_router.dart';
 
 class TaskPage extends StatelessWidget {
   const TaskPage({super.key});
@@ -8,6 +7,7 @@ class TaskPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Tasks")),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -23,12 +23,6 @@ class TaskPage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.pop();
-        },
-        child: const Icon(Icons.arrow_back),
       ),
     );
   }

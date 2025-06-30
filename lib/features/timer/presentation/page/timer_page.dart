@@ -113,11 +113,29 @@ class _TimerPageState extends State<TimerPage> {
                               ],
                             ),
                           ),
-                          floatingActionButton: FloatingActionButton(
-                            onPressed: () {
-                              context.go('/tasks');
+                          // Bottom Navigation Bar ( Dashboard and Tasks )
+                          bottomNavigationBar: BottomNavigationBar(
+                            items: const [
+                              BottomNavigationBarItem(
+                                icon: Icon(Icons.timer),
+                                label: 'Timer',
+                              ),
+                              BottomNavigationBarItem(
+                                icon: Icon(Icons.dashboard),
+                                label: 'Dashboard',
+                              ),
+                              BottomNavigationBarItem(
+                                icon: Icon(Icons.task),
+                                label: 'Tasks',
+                              ),
+                            ],
+                            onTap: (index) {
+                              if (index == 1) {
+                                context.go('/dashboard');
+                              } else if (index == 2) {
+                                context.go('/tasks');
+                              }
                             },
-                            child: const Icon(Icons.task),
                           ),
                         ),
                       );
