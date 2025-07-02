@@ -88,11 +88,10 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       if (isCountDown) {
         // Countdown: record start time and initial ms
         _startTime = DateTime.now();
-        _initialCountdownMs =
-            state.hours * 3600000 +
-            state.minutes * 60000 +
-            state.seconds * 1000 +
-            state.milliseconds;
+        final int hoursMs = state.hours * 3600000;
+        final int minutesMs = state.minutes * 60000;
+        final int secondsMs = state.seconds * 1000 + state.milliseconds;
+        _initialCountdownMs = hoursMs + minutesMs + secondsMs;
       } else {
         // Stopwatch: start or resume
         _stopwatch ??= Stopwatch();
@@ -100,11 +99,10 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
           _stopwatch!.start();
         }
         if (_countUpMilliseconds == 0) {
-          _countUpMilliseconds =
-              state.hours * 3600000 +
-              state.minutes * 60000 +
-              state.seconds * 1000 +
-              state.milliseconds;
+          final int hoursMs = state.hours * 3600000;
+          final int minutesMs = state.minutes * 60000;
+          final int secondsMs = state.seconds * 1000 + state.milliseconds;
+          _countUpMilliseconds = hoursMs + minutesMs + secondsMs;
         }
       }
       _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
@@ -174,8 +172,9 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
           add(TimerTicked(hours: h, minutes: m, seconds: s, milliseconds: ms));
         } else {
           // Stopwatch: use actual elapsed time
-          final elapsed =
-              _stopwatch!.elapsedMilliseconds + _countUpMilliseconds;
+          final stopwatchElapsed = _stopwatch!.elapsedMilliseconds;
+          final elapsed = stopwatchElapsed + _countUpMilliseconds;
+
           int ms = elapsed % 1000;
           int s = (elapsed ~/ 1000) % 60;
           int m = (elapsed ~/ 60000) % 60;
