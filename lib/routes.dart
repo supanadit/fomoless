@@ -13,23 +13,7 @@ final GoRouter routes = GoRouter(
     ShellRoute(
       navigatorKey: _rootNK,
       builder: (context, state, child) {
-        return Scaffold(
-          body: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Sidebar Menu
-              Container(
-                width: 200,
-                decoration: BoxDecoration(color: Colors.blue),
-                child: SingleChildScrollView(
-                  child: Column(children: [Text("Hello World")]),
-                ),
-              ),
-              // Main Content Area
-              Expanded(child: Stack(children: [Text("Hello World"), child])),
-            ],
-          ),
-        );
+        return SidebarHeroShell(child: child);
       },
       routes: <RouteBase>[
         GoRoute(
@@ -60,3 +44,90 @@ final GoRouter routes = GoRouter(
     ),
   ],
 );
+
+class SidebarHeroShell extends StatefulWidget {
+  final Widget child;
+  const SidebarHeroShell({super.key, required this.child});
+
+  @override
+  State<SidebarHeroShell> createState() => _SidebarHeroShellState();
+}
+
+class _SidebarHeroShellState extends State<SidebarHeroShell> {
+  bool showInMain = false;
+
+  void _onSidebarTap() {
+    setState(() {
+      showInMain = true;
+    });
+  }
+
+  void _onMainTap() {
+    setState(() {
+      showInMain = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Sidebar Menu
+          Visibility(
+            visible: !showInMain,
+            child: Container(
+              width: 200,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.inversePrimary,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Fomoless"),
+                          InkWell(
+                            onTap: _onSidebarTap,
+                            child: Hero(
+                              tag: 'hello',
+                              child: Icon(Icons.slideshow),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Main Content Area
+          Expanded(
+            child: Stack(
+              children: [
+                widget.child,
+                if (showInMain)
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: InkWell(
+                      onTap: _onMainTap,
+                      child: Hero(tag: 'hello', child: Icon(Icons.slideshow)),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
