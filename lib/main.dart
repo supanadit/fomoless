@@ -24,7 +24,7 @@ void main() async {
               listener: (context, modeState) {
                 context.read<TimerBloc>().add(TimerModeChanged(modeState.mode));
               },
-              child: const MyApp(),
+              child: const FomolessApp(),
             ),
           );
         },
@@ -33,8 +33,8 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FomolessApp extends StatelessWidget {
+  const FomolessApp({super.key});
 
   // This widget is the root of your application.
   @override

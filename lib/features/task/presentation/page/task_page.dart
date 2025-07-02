@@ -6,22 +6,19 @@ class TaskPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Tasks")),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 5,
-            children: [
-              TaskItemWidget(taskName: "Task 1", taskDuration: "25 minutes"),
-              TaskItemWidget(taskName: "Task 2", taskDuration: "15 minutes"),
-              TaskItemWidget(taskName: "Task 3", taskDuration: "30 minutes"),
-              TaskItemWidget(taskName: "Task 4", taskDuration: "10 minutes"),
-              TaskItemWidget(taskName: "Task 5", taskDuration: "20 minutes"),
-            ],
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 5,
+          children: [
+            TaskItemWidget(taskName: "Task 1", taskDuration: "25 minutes"),
+            TaskItemWidget(taskName: "Task 2", taskDuration: "15 minutes"),
+            TaskItemWidget(taskName: "Task 3", taskDuration: "30 minutes"),
+            TaskItemWidget(taskName: "Task 4", taskDuration: "10 minutes"),
+            TaskItemWidget(taskName: "Task 5", taskDuration: "20 minutes"),
+          ],
         ),
       ),
     );

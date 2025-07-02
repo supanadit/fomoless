@@ -59,6 +59,37 @@ class _TimerPageState extends State<TimerPage> {
     }
   }
 
+  Widget _timerWidget(TimerState timerState, ModeState modeState) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TimeModeWidget(
+            selectedMode: modeState.mode,
+            onModeSelected: (mode) {
+              context.read<ModeBloc>().add(ModeSwitchRequested(mode));
+            },
+          ),
+          const SizedBox(height: 20),
+          const TimeDisplayWidget(),
+          if (timerState.phase != TimerPhase.stopwatch)
+            const SizedBox(height: 10),
+          if (timerState.phase == TimerPhase.stopwatch)
+            const SizedBox(height: 30),
+          PhaseInfoWidget(timerState: timerState),
+          if (timerState.phase != TimerPhase.stopwatch)
+            const SizedBox(height: 20),
+          TimerActionWidget(timerState: timerState, modeState: modeState),
+          const SizedBox(height: 50),
+          const InformationWidget(),
+          const SizedBox(height: 20),
+          const ShortcutInfoWidget(),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ModeBloc, ModeState>(
@@ -71,42 +102,7 @@ class _TimerPageState extends State<TimerPage> {
               onKeyEvent: (event) {
                 _handleKey(context, event, modeState, timerState);
               },
-              child: Scaffold(
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TimeModeWidget(
-                        selectedMode: modeState.mode,
-                        onModeSelected: (mode) {
-                          context.read<ModeBloc>().add(
-                            ModeSwitchRequested(mode),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      const TimeDisplayWidget(),
-                      if (timerState.phase != TimerPhase.stopwatch)
-                        const SizedBox(height: 10),
-                      if (timerState.phase == TimerPhase.stopwatch)
-                        const SizedBox(height: 30),
-                      PhaseInfoWidget(timerState: timerState),
-                      if (timerState.phase != TimerPhase.stopwatch)
-                        const SizedBox(height: 20),
-                      TimerActionWidget(
-                        timerState: timerState,
-                        modeState: modeState,
-                      ),
-                      const SizedBox(height: 50),
-                      const InformationWidget(),
-                      const SizedBox(height: 20),
-                      const ShortcutInfoWidget(),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
-                ),
-                // Bottom Navigation Bar ( Dashboard and Tasks )
-              ),
+              child: _timerWidget(timerState, modeState),
             );
           },
         );

@@ -5,28 +5,37 @@ import 'package:fomoless/features/task/presentation/page/task_page.dart';
 import 'package:fomoless/features/timer/presentation/page/timer_page.dart';
 import 'package:go_router/go_router.dart';
 
+final GlobalKey<NavigatorState> _rootNK = GlobalKey<NavigatorState>();
+
 final GoRouter routes = GoRouter(
+  initialLocation: '/timer',
   routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const TimerPage();
+    ShellRoute(
+      navigatorKey: _rootNK,
+      builder: (context, state, child) {
+        return Scaffold(body: child);
       },
       routes: <RouteBase>[
         GoRoute(
-          path: 'dashboard',
+          path: '/timer',
+          builder: (BuildContext context, GoRouterState state) {
+            return const TimerPage();
+          },
+        ),
+        GoRoute(
+          path: '/dashboard',
           builder: (BuildContext context, GoRouterState state) {
             return const DashboardPage();
           },
         ),
         GoRoute(
-          path: 'tasks',
+          path: '/tasks',
           builder: (BuildContext context, GoRouterState state) {
             return const TaskPage();
           },
         ),
         GoRoute(
-          path: 'settings',
+          path: '/settings',
           builder: (BuildContext context, GoRouterState state) {
             return const SettingPage();
           },
