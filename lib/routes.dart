@@ -13,7 +13,23 @@ final GoRouter routes = GoRouter(
     ShellRoute(
       navigatorKey: _rootNK,
       builder: (context, state, child) {
-        return Scaffold(body: child);
+        return Scaffold(
+          body: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Sidebar Menu
+              Container(
+                width: 200,
+                decoration: BoxDecoration(color: Colors.blue),
+                child: SingleChildScrollView(
+                  child: Column(children: [Text("Hello World")]),
+                ),
+              ),
+              // Main Content Area
+              Expanded(child: Stack(children: [Text("Hello World"), child])),
+            ],
+          ),
+        );
       },
       routes: <RouteBase>[
         GoRoute(
