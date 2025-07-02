@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fomoless/di.dart';
+import 'package:fomoless/features/timer/presentation/bloc/mode_bloc.dart';
+import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
 import 'package:fomoless/routes.dart';
 
 void main() async {
@@ -10,7 +13,24 @@ void main() async {
   await sl<FlutterLocalNotificationsPlugin>().initialize(
     sl<InitializationSettings>(),
   );
-  runApp(const MyApp());
+  runApp(
+    BlocProvider(
+      create: (_) => ModeBloc(),
+      child: BlocBuilder<ModeBloc, ModeState>(
+        builder: (context, modeState) {
+          return BlocProvider(
+            create: (_) => TimerBloc(modeState.mode),
+            child: BlocListener<ModeBloc, ModeState>(
+              listener: (context, modeState) {
+                context.read<TimerBloc>().add(TimerModeChanged(modeState.mode));
+              },
+              child: const MyApp(),
+            ),
+          );
+        },
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
