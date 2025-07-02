@@ -96,10 +96,7 @@ class _SidebarHeroShellState extends State<SidebarHeroShell> {
                           Text("Fomoless"),
                           InkWell(
                             onTap: _onSidebarTap,
-                            child: Hero(
-                              tag: 'hello',
-                              child: Icon(Icons.slideshow),
-                            ),
+                            child: Icon(Icons.slideshow),
                           ),
                         ],
                       ),
@@ -120,7 +117,7 @@ class _SidebarHeroShellState extends State<SidebarHeroShell> {
                     left: 10,
                     child: InkWell(
                       onTap: _onMainTap,
-                      child: Hero(tag: 'hello', child: Icon(Icons.slideshow)),
+                      child: Icon(Icons.slideshow),
                     ),
                   ),
               ],
