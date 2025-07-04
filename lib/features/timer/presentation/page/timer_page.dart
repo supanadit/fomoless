@@ -6,6 +6,7 @@ import 'package:fomoless/features/timer/presentation/bloc/timer_bloc.dart';
 import 'package:fomoless/features/timer/presentation/widget/information_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/phase_info_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/shortcut_info_widget.dart';
+import 'package:fomoless/features/timer/presentation/widget/sidebar_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_display_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/time_mode_widget.dart';
 import 'package:fomoless/features/timer/presentation/widget/timer_action_widget.dart';
@@ -52,6 +53,10 @@ class _TimerPageState extends State<TimerPage> {
       if (modeState.mode == TimerMode.pomodoro) {
         context.read<TimerBloc>().add(TimerShortBreakRequested());
       }
+    } else if (event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.escape) {
+      // Open/close sidebar with Escape key
+      Scaffold.of(context).openDrawer();
     }
   }
 
@@ -77,6 +82,20 @@ class _TimerPageState extends State<TimerPage> {
                         onKeyEvent: (event) =>
                             _handleKey(context, event, modeState, timerState),
                         child: Scaffold(
+                          appBar: AppBar(
+                            title: const Text('Fomoless Timer'),
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            centerTitle: true,
+                            leading: Builder(
+                              builder: (context) => IconButton(
+                                icon: const Icon(Icons.menu),
+                                onPressed: () => Scaffold.of(context).openDrawer(),
+                                tooltip: 'Open menu',
+                              ),
+                            ),
+                          ),
+                          drawer: const SidebarWidget(),
                           body: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,

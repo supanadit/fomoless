@@ -21,6 +21,10 @@ class ShortcutInfoWidget extends StatelessWidget {
             "2. In Pomodoro mode, press Enter to go to the next phase.",
             style: TextStyle(color: Colors.grey),
           ),
+          Text(
+            "3. Press Escape to open the sidebar menu.",
+            style: TextStyle(color: Colors.grey),
+          ),
         ],
       ),
     );
