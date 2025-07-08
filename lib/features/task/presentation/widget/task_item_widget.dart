@@ -40,9 +40,16 @@ class TaskItemWidget extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                Text(
-                  taskDuration ?? "No duration specified",
-                  style: TextStyle(color: Color(0xFFa0a1a6)),
+                SizedBox(height: 2),
+                Row(
+                  children: [
+                    Icon(Icons.timer, size: 14, color: Color(0xFFa0a1a6)),
+                    SizedBox(width: 5),
+                    Text(
+                      taskDuration ?? "No duration specified",
+                      style: TextStyle(color: Color(0xFFa0a1a6)),
+                    ),
+                  ],
                 ),
               ],
             ),
