@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SidebarShell extends StatefulWidget {
   final Widget child;
@@ -39,7 +40,7 @@ class _SidebarShellState extends State<SidebarShell> {
                 child: Column(
                   children: [
                     // Spacing
-                    SizedBox(height: 15),
+                    SizedBox(height: 7),
                     // Sidebar Header
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -66,6 +67,23 @@ class _SidebarShellState extends State<SidebarShell> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10),
+                    // Sidebar Menu Items
+                    SidebarMenuItem(
+                      icon: Icons.timer,
+                      title: "Timer",
+                      onTap: () {
+                        context.go('/timer');
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    SidebarMenuItem(
+                      icon: Icons.task,
+                      title: "Tasks",
+                      onTap: () {
+                        context.go('/tasks');
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -74,8 +92,7 @@ class _SidebarShellState extends State<SidebarShell> {
           // Main Content Area
           Expanded(
             child: Container(
-              margin: const EdgeInsets.all(10),
-              padding: const EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 color: Colors.white,
@@ -97,6 +114,53 @@ class _SidebarShellState extends State<SidebarShell> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SidebarMenuItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+  final bool active;
+
+  const SidebarMenuItem({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.active = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 5),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            color: active ? const Color(0xFFE4E6E8) : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 30),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
