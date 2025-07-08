@@ -92,21 +92,24 @@ class _TimerPageState extends State<TimerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ModeBloc, ModeState>(
-      builder: (context, modeState) {
-        return BlocBuilder<TimerBloc, TimerState>(
-          builder: (context, timerState) {
-            return KeyboardListener(
-              focusNode: _focusNode,
-              autofocus: true,
-              onKeyEvent: (event) {
-                _handleKey(context, event, modeState, timerState);
-              },
-              child: _timerWidget(timerState, modeState),
-            );
-          },
-        );
-      },
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: BlocBuilder<ModeBloc, ModeState>(
+        builder: (context, modeState) {
+          return BlocBuilder<TimerBloc, TimerState>(
+            builder: (context, timerState) {
+              return KeyboardListener(
+                focusNode: _focusNode,
+                autofocus: true,
+                onKeyEvent: (event) {
+                  _handleKey(context, event, modeState, timerState);
+                },
+                child: _timerWidget(timerState, modeState),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
