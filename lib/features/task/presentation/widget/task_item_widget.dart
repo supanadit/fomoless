@@ -11,23 +11,41 @@ class TaskItemWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8.0),
+        // Border Only Bottom
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[300]!, width: 1.0),
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            taskName,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.grey[200],
+              border: Border.all(color: Colors.grey[400]!, width: 1.0),
             ),
           ),
-          Text(
-            taskDuration ?? "No duration specified",
-            style: TextStyle(color: Colors.black87),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  taskName,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  taskDuration ?? "No duration specified",
+                  style: TextStyle(color: Color(0xFFa0a1a6)),
+                ),
+              ],
+            ),
           ),
         ],
       ),
