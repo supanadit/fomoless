@@ -102,8 +102,8 @@ class _SidebarShellState extends State<SidebarShell> {
                   widget.child,
                   if (showInMain)
                     Positioned(
-                      top: 10,
-                      left: 10,
+                      top: 15,
+                      left: 15,
                       child: InkWell(
                         onTap: _onMainTap,
                         child: Icon(Icons.slideshow),
