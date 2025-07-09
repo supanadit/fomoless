@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fomoless/features/task/presentation/widget/task_item_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class TaskPage extends StatelessWidget {
   const TaskPage({super.key});
@@ -51,6 +52,13 @@ class TaskPage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.go('/tasks/form');
+        },
+        backgroundColor: Colors.blue,
+        child: Icon(Icons.add),
       ),
     );
   }
