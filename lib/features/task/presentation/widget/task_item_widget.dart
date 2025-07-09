@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class TaskItemWidget extends StatelessWidget {
   final String taskName;
   final String? taskDuration;
+  final String? taskSchedule;
   final bool checked;
 
   const TaskItemWidget({
     super.key,
     required this.taskName,
     this.taskDuration,
+    this.taskSchedule,
     this.checked = false,
   });
 
@@ -60,6 +62,17 @@ class TaskItemWidget extends StatelessWidget {
                 SizedBox(height: 2),
                 Row(
                   children: [
+                    Icon(
+                      Icons.calendar_today,
+                      size: 14,
+                      color: Color(0xFFa0a1a6),
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      taskSchedule ?? "No schedule specified",
+                      style: TextStyle(color: Color(0xFFa0a1a6)),
+                    ),
+                    SizedBox(width: 10),
                     Icon(Icons.timer, size: 14, color: Color(0xFFa0a1a6)),
                     SizedBox(width: 5),
                     Text(
