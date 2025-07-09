@@ -16,12 +16,12 @@ class TaskItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-      decoration: BoxDecoration(
-        // Border Only Bottom
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[300]!, width: 1.0),
-        ),
-      ),
+      // decoration: BoxDecoration(
+      //   // Border Only Bottom
+      //   border: Border(
+      //     bottom: BorderSide(color: Colors.grey[300]!, width: 1.0),
+      //   ),
+      // ),
       child: Row(
         children: [
           // Circle Checkbox Placeholder
