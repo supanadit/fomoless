@@ -207,10 +207,10 @@ Win32Window::MessageHandler(HWND hwnd,
       return 0;
     }
     case WM_GETMINMAXINFO: {
-      // Set minimum window size to 768x768
+      // Set minimum window size to 720x720 pixels.
       auto minmax_info = reinterpret_cast<MINMAXINFO*>(lparam);
-      minmax_info->ptMinTrackSize.x = 768;
-      minmax_info->ptMinTrackSize.y = 768;
+      minmax_info->ptMinTrackSize.x = 720;
+      minmax_info->ptMinTrackSize.y = 720;
       return 0;
     }
     case WM_ACTIVATE:
