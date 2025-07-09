@@ -57,7 +57,6 @@ class TaskPage extends StatelessWidget {
         onPressed: () {
           context.go('/tasks/form');
         },
-        backgroundColor: Colors.blue,
         child: Icon(Icons.add),
       ),
     );
