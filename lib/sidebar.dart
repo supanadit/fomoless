@@ -43,113 +43,17 @@ class _SidebarShellState extends State<SidebarShell> {
     final isSmallScreen = screenWidth < 1024;
     return Scaffold(
       backgroundColor: Color(0xFFF7F8FA),
-      body: Stack(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Sidebar Menu (only for large screens)
-              if (!isSmallScreen && !showInMain)
-                SizedBox(
-                  width: 250,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(height: 7),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 10,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  "Fomoless",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: _onSidebarTap,
-                                child: Icon(Icons.slideshow),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        // Sidebar Menu Items
-                        SidebarMenuItem(
-                          icon: Icons.timer,
-                          title: "Timer",
-                          onTap: () {
-                            context.go('/timer');
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        SidebarMenuItem(
-                          icon: Icons.task,
-                          title: "Tasks",
-                          onTap: () {
-                            context.go('/tasks');
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              // Main Content Area
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.white,
-                  ),
-                  child: Stack(
-                    children: [
-                      widget.child,
-                      if (!isSmallScreen && showInMain)
-                        Positioned(
-                          top: 15,
-                          left: 15,
-                          child: InkWell(
-                            onTap: _onMainTap,
-                            child: Icon(Icons.slideshow),
-                          ),
-                        ),
-                      // Floating sidebar button for small screens
-                      if (isSmallScreen)
-                        Positioned(
-                          top: 15,
-                          left: 15,
-                          child: InkWell(
-                            onTap: _openFloatingSidebar,
-                            child: Icon(Icons.menu),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Floating Sidebar Overlay for small screens
-          if (isSmallScreen && showFloatingSidebar)
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: _closeFloatingSidebar,
-                child: Container(
-                  color: Colors.black.withOpacity(0.3),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      width: 250,
-                      color: Colors.white,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Sidebar Menu (only for large screens)
+                if (!isSmallScreen && !showInMain)
+                  SizedBox(
+                    width: 250,
+                    child: SingleChildScrollView(
                       child: Column(
                         children: [
                           SizedBox(height: 7),
@@ -172,18 +76,18 @@ class _SidebarShellState extends State<SidebarShell> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: _closeFloatingSidebar,
-                                  child: Icon(Icons.close),
+                                  onTap: _onSidebarTap,
+                                  child: Icon(Icons.slideshow),
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(height: 10),
+                          // Sidebar Menu Items
                           SidebarMenuItem(
                             icon: Icons.timer,
                             title: "Timer",
                             onTap: () {
-                              _closeFloatingSidebar();
                               context.go('/timer');
                             },
                           ),
@@ -192,7 +96,6 @@ class _SidebarShellState extends State<SidebarShell> {
                             icon: Icons.task,
                             title: "Tasks",
                             onTap: () {
-                              _closeFloatingSidebar();
                               context.go('/tasks');
                             },
                           ),
@@ -200,10 +103,110 @@ class _SidebarShellState extends State<SidebarShell> {
                       ),
                     ),
                   ),
+                // Main Content Area
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.white,
+                    ),
+                    child: Stack(
+                      children: [
+                        widget.child,
+                        if (!isSmallScreen && showInMain)
+                          Positioned(
+                            top: 15,
+                            left: 15,
+                            child: InkWell(
+                              onTap: _onMainTap,
+                              child: Icon(Icons.slideshow),
+                            ),
+                          ),
+                        // Floating sidebar button for small screens
+                        if (isSmallScreen)
+                          Positioned(
+                            top: 15,
+                            left: 15,
+                            child: InkWell(
+                              onTap: _openFloatingSidebar,
+                              child: Icon(Icons.menu),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // Floating Sidebar Overlay for small screens
+            if (isSmallScreen && showFloatingSidebar)
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: _closeFloatingSidebar,
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        width: 270,
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 7),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 10,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text(
+                                      "Fomoless",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: _closeFloatingSidebar,
+                                    child: Icon(Icons.close),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            SidebarMenuItem(
+                              icon: Icons.timer,
+                              title: "Timer",
+                              onTap: () {
+                                _closeFloatingSidebar();
+                                context.go('/timer');
+                              },
+                            ),
+                            SizedBox(height: 10),
+                            SidebarMenuItem(
+                              icon: Icons.task,
+                              title: "Tasks",
+                              onTap: () {
+                                _closeFloatingSidebar();
+                                context.go('/tasks');
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

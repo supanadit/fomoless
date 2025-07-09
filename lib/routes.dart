@@ -20,34 +20,34 @@ final GoRouter routes = GoRouter(
       routes: <RouteBase>[
         GoRoute(
           path: '/timer',
-          builder: (BuildContext context, GoRouterState state) {
-            return const TimerPage();
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return NoTransitionPage(child: TimerPage());
           },
         ),
         GoRoute(
           path: '/dashboard',
-          builder: (BuildContext context, GoRouterState state) {
-            return const DashboardPage();
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return NoTransitionPage(child: DashboardPage());
           },
         ),
         GoRoute(
           path: '/tasks',
-          builder: (BuildContext context, GoRouterState state) {
-            return const TaskPage();
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return NoTransitionPage(child: TaskPage());
           },
           routes: <RouteBase>[
             GoRoute(
               path: 'form',
-              builder: (BuildContext context, GoRouterState state) {
-                return const TaskFormPage();
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                return NoTransitionPage(child: TaskFormPage());
               },
             ),
           ],
         ),
         GoRoute(
           path: '/settings',
-          builder: (BuildContext context, GoRouterState state) {
-            return const SettingPage();
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return NoTransitionPage(child: SettingPage());
           },
         ),
       ],
