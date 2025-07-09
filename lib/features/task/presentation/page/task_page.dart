@@ -39,7 +39,11 @@ class TaskPage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-              TaskItemWidget(taskName: "Task 1", taskDuration: "25 minutes"),
+              TaskItemWidget(
+                taskName: "Task 1",
+                taskDuration: "25 minutes",
+                checked: true,
+              ),
               TaskItemWidget(taskName: "Task 2", taskDuration: "15 minutes"),
               TaskItemWidget(taskName: "Task 3", taskDuration: "30 minutes"),
               TaskItemWidget(taskName: "Task 4", taskDuration: "10 minutes"),

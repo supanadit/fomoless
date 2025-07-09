@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 class TaskItemWidget extends StatelessWidget {
   final String taskName;
   final String? taskDuration;
+  final bool checked;
 
-  const TaskItemWidget({super.key, required this.taskName, this.taskDuration});
+  const TaskItemWidget({
+    super.key,
+    required this.taskName,
+    this.taskDuration,
+    this.checked = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +24,26 @@ class TaskItemWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: Colors.grey[200],
-              border: Border.all(color: Colors.grey[400]!, width: 1.0),
-            ),
-          ),
+          // Circle Checkbox Placeholder
+          checked
+              ? Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: Colors.green[400],
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.check, size: 16, color: Colors.white),
+                )
+              : Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.grey[200],
+                    border: Border.all(color: Colors.grey[400]!, width: 1.0),
+                  ),
+                ),
           SizedBox(width: 10),
           Expanded(
             child: Column(
