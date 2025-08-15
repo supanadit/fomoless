@@ -20,10 +20,18 @@ void initializeDependencies() {
     () => const AndroidInitializationSettings('@mipmap/ic_launcher'),
   );
 
+  sl.registerLazySingleton<LinuxInitializationSettings>(
+    () => LinuxInitializationSettings(
+      defaultActionName: 'Open notification',
+      defaultIcon: AssetsLinuxIcon('icons/app_icon.png'),
+    ),
+  );
+
   sl.registerLazySingleton<InitializationSettings>(
     () => InitializationSettings(
       android: sl<AndroidInitializationSettings>(),
       windows: sl<WindowsInitializationSettings>(),
+      linux: sl<LinuxInitializationSettings>(),
     ),
   );
 }
